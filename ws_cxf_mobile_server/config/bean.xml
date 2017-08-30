@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xmlns:jaxrs="http://cxf.apache.org/jaxrs" xmlns:cxf="http://cxf.apache.org/core"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+				            http://www.springframework.org/schema/beans/spring-beans.xsd
+				            http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd
+				            http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
+				            http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd">
+
+
+
+<!-- 公网手机号查询客户端 
+ 正式开发时将address在单独的配置文件配置
+ serviceClass:portType的类路径
+ id:spring容器中bean的id
+-->
+  <jaxws:client id="mobileClient" address="http://ws.webxml.com.cn/WebServices/MobileCodeWS.asmx"
+  serviceClass="cn.com.webxml.MobileCodeWSSoap">
+  
+     
+  </jaxws:client>
+
+<!-- 配置本系统手机号查询service -->
+
+<bean id="mobileService" class="cn.itcast.ws.mobile.service.impl.MobileServiceImpl">
+
+   <!-- 注入查询公网手机号的客户端bean -->
+   
+    <property name="mobileClient" ref="mobileClient"></property>
+</bean>
+   <!-- 发布手机号查询服务 -->
+   
+   <jaxws:server address="/mobile" serviceClass="cn.itcast.ws.mobile.service.impl.MobileServiceImpl">
+     <jaxws:serviceBean>
+        <ref bean="mobileService"/>     
+     </jaxws:serviceBean>
+   </jaxws:server>        
+</beans>
+
+
